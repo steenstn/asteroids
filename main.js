@@ -22,7 +22,7 @@
     let things = [];
     let particles = [];
     const particleLifetimeCounterMax = 30;
-    for(let i = 0; i < 100; i++) {
+    for(let i = 0; i < 2000; i++) {
         particles.push({
             x:100,
             y:100,
@@ -82,6 +82,9 @@
 
                     thing.vx = clamp(thing.vx, -thing.maxSpeed,thing.maxSpeed);
                     thing.vy = clamp(thing.vy,-thing.maxSpeed,thing.maxSpeed);
+                    //activateParticles(particles, thing, 1, 5, thing.angle+Math.PI+(Math.random()*Math.PI/8-(Math.PI/16)));
+                    shipBoosterParticles(particles, thing);
+                        
                 }
 
                 if (keysDown.has(thing.fireKey) && thing.cooldownCounter < 0) {
@@ -122,7 +125,7 @@
                             otherThing.health--;
                             thing.health--;
                         } else if (hasFlag(thing, CAN_HURT) && hasFlag(otherThing, CAN_GET_HURT)) {
-                            activateParticles(particles, thing, 10, 5);
+                            activateParticles(particles, thing.x, thing.y, 10, 5);
                             otherThing.health--;
                         } else if (hasFlag(thing, CAN_BE_PICKED_UP) && hasFlag(otherThing, CONTROLLABLE_BY_PLAYER)) {
                             applyPickup(thing, otherThing);
