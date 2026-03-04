@@ -1,8 +1,3 @@
-// Pickup Types
-const PICKUP_TYPE_HEALTH = 1;
-const PICKUP_TYPE_COOLDOWN = 2;
-const PICKUP_TYPE_SPEEDUP = 3;
-
 let applyPickup = (pickup, recipient) => {
     switch(pickup.pickupType) {
         case PICKUP_TYPE_HEALTH:

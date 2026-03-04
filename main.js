@@ -23,6 +23,7 @@
 
     let particles = []; // Particles do not interact with anything, they are just for effect so handle them separately
 
+    const particleLifetimeCounterMax = 30;
     // Preallocate max number of particles
     for(let i = 0; i < 2000; i++) {
         particles.push({
@@ -201,7 +202,6 @@
             }
         }
 
-        const particleLifetimeCounterMax = 30;
         particles.forEach(p => {
             if (p.active) {
                 p.lifetimeCounter--;
