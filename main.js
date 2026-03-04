@@ -1,6 +1,6 @@
     let c = document.getElementById('c');
-    c.width = window.innerWidth-50;
-    c.height = window.innerHeight-50;
+    c.width = window.innerWidth-10;
+    c.height = window.innerHeight-10;
     let ctx = c.getContext('2d');
     let keysDown = new Set();
     let pressKey = (key) => {
@@ -19,9 +19,11 @@
     }, false)
 
 
-    let things = [];
-    let particles = [];
-    const particleLifetimeCounterMax = 30;
+    let things = []; // All types of entities go here. Players, asteroids, bullets, pickups..
+
+    let particles = []; // Particles do not interact with anything, they are just for effect so handle them separately
+
+    // Preallocate max number of particles
     for(let i = 0; i < 2000; i++) {
         particles.push({
             x:100,
@@ -35,6 +37,7 @@
         });
     }
 
+    // We want the players in spot 0 and 1
     things.push(
         createPlayer(c.width-500, c.height/2, "ArrowLeft", "ArrowUp", "ArrowRight", '.'), 
         createPlayer(500, c.height/2, "a", "w", "d", "g"),
@@ -43,6 +46,8 @@
     for(let i = 0; i < 10; i++) {
         things.push(createAsteroid(100*Math.random(), c.height*Math.random(), 5, 0));
     }
+
+    // Preallocate a bunch of bullets. They will be activated when players fire
     for(let i = 0; i < 200; i++) {
         things.push(createBullet(things[0], INACTIVE));
     }
@@ -56,13 +61,13 @@
 
             // Reset single-frame stuff
             thing.hasDiedThisFrame = false;
+
+            //-----
             
             if (hasFlag(thing, INACTIVE)) {
                 continue;
             }
 
-
-            //// --------
 
             if (hasFlag(thing, CONTROLLABLE_BY_PLAYER)) {
                 thing.cooldownCounter--;
@@ -196,6 +201,7 @@
             }
         }
 
+        const particleLifetimeCounterMax = 30;
         particles.forEach(p => {
             if (p.active) {
                 p.lifetimeCounter--;
