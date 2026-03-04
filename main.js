@@ -124,6 +124,7 @@
                         if (hasFlag(thing, IS_BULLET) && hasFlag(otherThing, CAN_GET_SHOT)) {
                             otherThing.health--;
                             thing.health--;
+                            activateParticles(particles, thing.x, thing.y, 5, 8);
                         } else if (hasFlag(thing, CAN_HURT) && hasFlag(otherThing, CAN_GET_HURT)) {
                             activateParticles(particles, thing.x, thing.y, 10, 5);
                             otherThing.health--;

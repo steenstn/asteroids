@@ -6,7 +6,7 @@ const activateParticles = (particles, x, y, numParticles, maxSpeed, angle = Math
         if (p.active === false) {
             p.active = true;
             addedParticles++;
-            p.lifetimeCounter = particleLifetimeCounterMax;
+            p.lifetimeCounter = particleLifetimeCounterMax*Math.random();
             p.x = x;
             p.y = y;
             p.vx = Math.random()*maxSpeed;
@@ -18,7 +18,7 @@ const activateParticles = (particles, x, y, numParticles, maxSpeed, angle = Math
 };
 
 const shipBoosterParticles = (particles, ship) => {
-    const x = ship.x-18*Math.cos(ship.angle);
-    const y = ship.y-18*Math.sin(ship.angle);
+    const x = (ship.x+ship.width/2)-15*Math.cos(ship.angle);
+    const y = (ship.y+ship.height/2)-15*Math.sin(ship.angle);
     activateParticles(particles, x, y, 5, 8, ship.angle+Math.PI+(Math.random()*Math.PI/8-(Math.PI/16)));
 }
