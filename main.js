@@ -40,7 +40,6 @@
         createPlayer(500, c.height/2, "a", "w", "d", "g"),
     );
 
-    // TODO: Calculate number of asteroids
     for(let i = 0; i < 10; i++) {
         things.push(createAsteroid(100*Math.random(), c.height*Math.random(), 5, 0));
     }
@@ -54,12 +53,9 @@
 
         for(let i = 0; i < things.length; i++) {
             let thing = things[i];
+
             // Reset single-frame stuff
-            if (thing.hasDiedThisFrame) {
-                setFlag(thing, INACTIVE);
-                thing.hasDiedThisFrame = false;
-            }
-            
+            thing.hasDiedThisFrame = false;
             
             if (hasFlag(thing, INACTIVE)) {
                 continue;
@@ -80,9 +76,8 @@
                     thing.vx+=0.4 * Math.cos(thing.angle);
                     thing.vy+=0.4 * Math.sin(thing.angle);
 
-                    thing.vx = clamp(thing.vx, -thing.maxSpeed,thing.maxSpeed);
-                    thing.vy = clamp(thing.vy,-thing.maxSpeed,thing.maxSpeed);
-                    //activateParticles(particles, thing, 1, 5, thing.angle+Math.PI+(Math.random()*Math.PI/8-(Math.PI/16)));
+                    thing.vx = clamp(thing.vx, -thing.maxSpeed, thing.maxSpeed);
+                    thing.vy = clamp(thing.vy, -thing.maxSpeed, thing.maxSpeed);
                     shipBoosterParticles(particles, thing);
                         
                 }
@@ -96,6 +91,7 @@
             thing.x += thing.vx;
             thing.y += thing.vy;
 
+            // Wrap around screen
             const wrapBuffer = 60;
             if (thing.x < -wrapBuffer) {
                 thing.x = c.width + wrapBuffer;
@@ -108,12 +104,13 @@
                 thing.y = -wrapBuffer;
             }
 
-            if(hasFlag(thing, LIFETIME_COUNTER)) {
+            if (hasFlag(thing, LIFETIME_COUNTER)) {
                 thing.lifetimeCounter--;
                 if(thing.lifetimeCounter <= 0) {
                     setFlag(thing, INACTIVE);
                 }
             }
+
             if (hasFlag(thing, CAN_COLLIDE)) {
                 for(let j = 0; j < things.length; j++) {
                     let otherThing = things[j];
@@ -135,14 +132,9 @@
                     }
                 }
                 if (thing.health <=0) {
-                    switch(thing.type) {
-                        case TYPE_BULLET:
-                            activateParticles(particles, thing, 5, 5);
-                            break;
-                    }
                     thing.hasDiedThisFrame=true;
+                    activateParticles(particles, thing, thing.particlesGeneratedWhenDied, 5);
                 }
-
             }
 
 
@@ -167,11 +159,8 @@
             if (hasFlag(thing, INACTIVE)) {
                 continue;
             }
-            switch(thing.type) {
-                case TYPE_PLAYER:
-                    //ctx.fillStyle = "#fff";
-                    //ctx.fillText(thing.cooldownCounter, thing.x-10, thing.y,10);
-                    //ctx.fillRect(thing.x, thing.y, thing.width, thing.height);
+            switch(thing.sprite) {
+                case SPRITE_PLAYER:
                     ctx.strokeStyle = "#fff";
                     let ox = thing.x+thing.width/2;
                     let oy = thing.y+thing.height/2;
@@ -187,28 +176,26 @@
                     ctx.fillRect(20, 20+i*30, thing.health*2, 20);
                     break;
 
-                case TYPE_ASTEROID:
+                case SPRITE_ASTEROID:
                     ctx.beginPath();
                     ctx.arc(thing.x, thing.y, thing.width, 0, 2 * Math.PI, false); 
                     ctx.fillStyle = 'grey';
                     ctx.fill();
-                    //ctx.fillStyle="green";
-                    //ctx.fillRect(thing.x-10, thing.y-30, thing.health, 10);
                 break;
 
-                case TYPE_PICKUP:
+                case SPRITE_PICKUP:
                     ctx.fillStyle = thing.color;
                     ctx.fillRect(thing.x, thing.y, thing.width, thing.height);
-                    
                     break;
 
-                default:
-                    //ctx.fillText(thing.health, thing.x-10, thing.y-10);
+                case SPRITE_BULLET:
                     ctx.fillStyle = "#0f0";
                     ctx.fillRect(thing.x,thing.y, thing.width,thing.height)
+                    break;
 
             }
         }
+
         particles.forEach(p => {
             if (p.active) {
                 p.lifetimeCounter--;
