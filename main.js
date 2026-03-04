@@ -55,9 +55,9 @@
         for(let i = 0; i < things.length; i++) {
             let thing = things[i];
             // Reset single-frame stuff
-            if (thing.hasDied) {
+            if (thing.hasDiedThisFrame) {
                 setFlag(thing, INACTIVE);
-                thing.hasDied = false;
+                thing.hasDiedThisFrame = false;
             }
             
             
@@ -140,14 +140,14 @@
                             activateParticles(particles, thing, 5, 5);
                             break;
                     }
-                    thing.hasDied=true;
+                    thing.hasDiedThisFrame=true;
                 }
 
             }
 
 
             // End of frame checks
-            if (thing.hasDied) {
+            if (thing.hasDiedThisFrame) {
                 if (hasFlag(thing, CAN_SPLIT)) {
                     if(thing.size >1)  {
                         things.push(createAsteroid(thing.x, thing.y, thing.size - 1, 0));

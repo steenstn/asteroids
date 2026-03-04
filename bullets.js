@@ -9,7 +9,7 @@ const activateBullet = (player, things) =>  {
             t.health= 1;
             t.vx= 5 * Math.cos(player.angle)+player.vx;
             t.vy= 5 * Math.sin(player.angle)+player.vy;
-            t.hasDied= false;
+            t.hasDiedThisFrame= false;
             t.lifetimeCounter= 200;
             unsetFlag(t, INACTIVE);
             break;
